@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config()
 
 const bodyParser   = require('body-parser');
 const cookieParser = require('cookie-parser');
@@ -14,9 +14,10 @@ const passport     = require('passport')
 const LocalStrategy = require('passport-local').Strategy
 const User         = require('./models/user')
 const flash        = require('connect-flash')
+const SlackStrategy = require('passport-slack').Strategy
 
 mongoose
-  .connect('mongodb://localhost/passport-demo', {useNewUrlParser: true})
+  .connect(process.env.MONGODB, {useNewUrlParser: true})
   .then(x => {
     console.log(`Connected to Mongo! Database name: "${x.connections[0].name}"`)
   })
@@ -67,6 +68,34 @@ passport.use(new LocalStrategy((username, password, next)=>{
     return next(null, user)
   })
 }))
+
+passport.use(new SlackStrategy({
+  clientID: "2432150752.526191930400",
+  clientSecret: "1ed3dd6221e35886ca53c55be9038d1e"
+}, (accessToken, refreshToken, profile, done) => {
+  User.findOne({ slackID: profile.id })
+  .then(user => {
+    //if (err) {
+      //return done(err);
+    
+    if (user) {
+      return done(null, user);
+    }
+
+    const newUser = new User({
+      slackID: profile.id
+    });
+
+    newUser.save()
+    .then(user => {
+      done(null, newUser);
+    })
+  })
+  .catch(error => {
+    next(error)
+  })
+
+}));
 
 app.use(flash())
 app.use(passport.initialize())

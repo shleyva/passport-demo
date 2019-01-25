@@ -1,0 +1,7 @@
+---
+  applications:
+  - instances: 1
+    name: sociallogin_sant_24_ene_18
+    memory: 128M
+    domain: mybluemix.net
+    host: sociallogin_sant_24_ene_18
