@@ -87,8 +87,8 @@ passport.use(
 passport.use(
   new SlackStrategy(
     {
-      clientID: "63093587511.526923670434",
-      clientSecret: "194ebc5aff751f4613ce62fa28a973e2"
+      clientID: "2432150752.526191930400",
+      clientSecret: "1ed3dd6221e35886ca53c55be9038d1e"
     },
     (accessToken, refreshToken, profile, done) => {
       User.findOne({ slackID: profile.id })
@@ -113,34 +113,6 @@ passport.use(
   )
 );
 
-passport.use(
-  new GoogleStrategy(
-    {
-      clientID:
-        "170395869679-2ugskkcr3189rdoc5r7fitasjgne1trt.apps.googleusercontent.com",
-      clientSecret: "5iqQYId4KhD-_vN0ghOnT8mD",
-      callbackURL: "/auth/google/callback"
-    },
-    (accessToken, refreshToken, profile, done) => {
-      User.findOne({ googleID: profile.id })
-        .then(user => {
-          if (user) return done(null, user);
-          const newUser = new User({
-            googleID: profile.id
-          });
-          newUser.save().then(user => {
-            done(null, newUser);
-          });
-        })
-        .catch(error => {
-          done(error);
-        });
-    }
-  )
-);
-app.use(flash());
-app.use(passport.initialize());
-app.use(passport.session());
 
 // Express View engine setup
 
