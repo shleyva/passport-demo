@@ -5,3 +5,5 @@
     memory: 128M
     domain: mybluemix.net
     host: sociallogin_sant_24_ene_18
+    path: . 
+    command: npm start
