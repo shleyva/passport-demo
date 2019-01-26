@@ -82,10 +82,19 @@ authRoutes.get('/logout',(req, res, next)=>{
   res.redirect('login')
 })
 
-authRoutes.get("/auth/slack", passport.authenticate("slack"));
-authRoutes.get("/auth/slack/callback", passport.authenticate("slack", {
-  successRedirect: "/private-page",
-  failureRedirect: "/"
-}));
+authRoutes.get('/auth/slack', passport.authenticate("slack"))
+authRoutes.get('/auth/slack/callback', passport.authenticate('slack', {
+  successRedirect:'/private-page',
+  failureRedirect: '/'
+}))
 
+authRoutes.get('/auth/google', passport.authenticate("google", {
+  scope: ["https://www.googleapis.com/auth/plus.login",
+          "https://www.googleapis.com/auth/plus.profile.emails.read"]
+}))
+
+authRoutes.get("/auth/google/callback", passport.authenticate("google", {
+  failureRedirect: "/",
+  successRedirect: "/private-page"
+}));
 module.exports = authRoutes
